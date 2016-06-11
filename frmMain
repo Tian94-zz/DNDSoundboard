@@ -1,0 +1,423 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Media;
+using DNDSoundboard;
+using System.Diagnostics;
+using System.IO;
+using Microsoft.DirectX.AudioVideoPlayback;
+
+namespace DNDSoundboard
+{
+    public partial class frmMain : Form
+    {
+        public frmMain()
+        {
+            InitializeComponent();
+        }
+
+        #region vars
+        private string path = @".\Sounds\Death.wav";
+        private string MusicPath = "";
+        private string Full;
+        private string FormatReferenceVideo;
+        private string Source;
+        private string VideoID;
+        System.Windows.Media.MediaPlayer Player = Utilities.GetMediaPlayer();
+        bool b = true;
+        #endregion vars
+
+        #region PlaySoundEffect
+        private void PlaySound()
+        {
+            SoundPlayer SoundEffect = Utilities.SoundPlayer(path);
+            SoundEffect.Play();
+        }
+        #endregion PlaySoundEffect
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LoadMusicDetails();
+        }
+
+        private void btnDing_Click(object sender, EventArgs e)
+        {
+            path = @"C:\WINDOWS\Media\ding.wav";
+            PlaySound();
+        }
+
+        private void btnFireball_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\SmallFireball.wav";
+            PlaySound();
+        }
+
+        #region Weapons
+        private void btnSwordSlash_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\SwordSlash.wav";
+            PlaySound();
+        }
+
+        private void btnSwordSlashLimb_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\SwordSlashLimb.wav";
+            PlaySound();
+        }
+
+        private void btnSwordsClashing_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\SwordsClashing.wav";
+            PlaySound();
+        }
+        
+        private void btnSwordsBout_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\SwordsBout.wav";
+            PlaySound();
+        }
+
+        private void btnSwordDraw_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\SwordDraw.wav";
+            PlaySound();
+        }
+
+        private void btnSwordFlaunt_Click_1(object sender, EventArgs e)
+        {
+            path = @".\Sounds\SwordFlaunt.wav";
+            PlaySound();
+        }
+
+        private void btnSwordMiss_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\SwordMiss.wav";
+            PlaySound();
+        }
+        #region Bows
+
+        private void btnBowRelease_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\BowRelease.wav";
+            PlaySound();
+        }
+
+        private void btnBowFlames_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\BowFlame.wav";
+            PlaySound();
+        }
+
+        #endregion Bows
+
+        #region Knives
+
+        private void btnThrowingKnife_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\KnifeThrow.wav";
+            PlaySound();
+        }
+
+        private void btnKnifeSharpen_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\KnifeSharpening.wav";
+            PlaySound();
+        }
+
+        private void btnKnifeStab_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\KnifeStab.wav";
+            PlaySound();
+        }
+
+
+        #endregion Knives
+
+        #region Clubs
+        private void btnStaffHit_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\StaffHit.wav";
+            PlaySound();
+        }
+
+        private void btnClubHit_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\ClubHit.wav";
+            PlaySound();
+        }
+
+        private void btnMiss_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\Miss.wav";
+            PlaySound();
+        }
+
+
+        #endregion Clubs
+
+        #region Defense
+
+        private void btnBlock_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\MetalShieldBlock.wav";
+            PlaySound();
+        }
+
+        private void btnDeath_Click(object sender, EventArgs e)
+        {
+            path = @".\Sounds\Death.wav";
+            PlaySound();
+        }
+
+        #endregion Defense
+
+        #endregion Weapons
+
+
+        #region Music
+        #region CoreMusicPlayer
+        #region events
+        private void btnTogglePlay_Click(object sender, EventArgs e)
+        {
+            if (b == true)
+            {
+                Player.MediaEnded += new EventHandler(Media_Ended);
+                Player.Play();
+                b = false;
+            }
+            else
+            {
+                StopMusic();
+                b = true;
+            }
+        }
+
+        private void Media_Ended(object sender, EventArgs e)
+        {
+            Player.Position = TimeSpan.Zero;
+            Player.Play();
+        }
+
+        private void trkThemes_Scroll(object sender, EventArgs e)
+        {
+            Player.Volume = (double)trkThemes.Value / 100;
+        }
+
+        private void btnBattleMusic_Click(object sender, EventArgs e)
+        {
+            txtCurrentlyPlaying.Text = "Celtic Battle Theme";
+            Full = Path.GetFullPath("C:BattleMusicWolfBlood.mp3");
+            LoadThemeMusic();
+        }
+
+        private void btnMainVillainTheme_Click(object sender, EventArgs e)
+        {
+            Full = Path.GetFullPath("C:MainVillainTheme.mp3");
+            txtCurrentlyPlaying.Text = "Main Villain Theme";
+            LoadThemeMusic();
+        }
+
+
+        private void btnMainBattleTheme_Click(object sender, EventArgs e)
+        {
+            txtCurrentlyPlaying.Text = "Main Battle Theme";
+            Full = Path.GetFullPath("C:MainBattleTheme.mp3");
+            LoadThemeMusic();
+        }
+
+        private void btnBossBattleTheme_Click(object sender, EventArgs e)
+        {
+            txtCurrentlyPlaying.Text = "Boss Battle Theme";
+            Full = Path.GetFullPath("C:BossBattleTheme.mp3");
+            LoadThemeMusic();
+        }
+
+        private void btnHeroTheme_Click(object sender, EventArgs e)
+        {
+            txtCurrentlyPlaying.Text = "Hero Theme";
+            Full = Path.GetFullPath("C:HeroTheme.mp3");
+            LoadThemeMusic();
+        }
+
+        private void btnTownTheme_Click(object sender, EventArgs e)
+        {
+            txtCurrentlyPlaying.Text = "Town Theme";
+            Full = Path.GetFullPath("C:TownTheme.mp3");
+            LoadThemeMusic();
+        }
+
+        private void btnDungeonTheme_Click(object sender, EventArgs e)
+        {
+            txtCurrentlyPlaying.Text = "Dungeon Theme";
+            Full = Path.GetFullPath("C:DungeonTheme.mp3");
+            LoadThemeMusic();
+        }
+
+        private void btnTristramTheme_Click(object sender, EventArgs e)
+        {
+            txtCurrentlyPlaying.Text = "Tristram Theme";
+            Full = Path.GetFullPath("C:TristramTheme.mp3");
+            LoadThemeMusic();
+        }
+        #endregion events
+        private void LoadThemeMusic()
+        {
+            b = true;
+                Player.Open(GetURI());
+        }
+
+        private System.Uri GetURI()
+        {
+            return new System.Uri(Full);
+        }
+
+        private void StopMusic()
+        {
+            Player.Pause();
+        }
+    
+        #endregion CoreMusicPlayer
+        private void PlayTheMovie()
+        {
+            SFPlayer.Loop = true;
+            SFPlayer.Movie = FormatReferenceVideo;
+        }
+
+        private void btnLoadVideo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Source = txtVideoRef.Text;
+                GetVideoID();
+                FormatReferenceVideo = txtVideoRef.Text.Replace("watch?", "").Replace("=", "/")+"?autoplay=1&loop=1&playlist="+VideoID;//also need to return play list id which is 11 chars
+                PlayTheMovie();
+            }
+            catch (Exception E)
+            {
+                MessageBox.Show("ERROR:" + E);
+            }
+        }
+
+        private void GetVideoID()
+        {
+            VideoID = Source;
+            VideoID = VideoID.Substring(32);
+        }
+
+        private void btnPlayCust1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Source = txtCustomSource1.Text;
+                GetVideoID();
+                FormatReferenceVideo = txtCustomSource1.Text.Replace("watch?", "").Replace("=", "/")+"?autoplay=1&loop=1&playlist=" + VideoID; ;
+                PlayTheMovie();
+            }
+            catch (Exception E)
+            {
+                MessageBox.Show("ERROR:" + E);
+            }
+        }
+
+        private void btnPlayCust2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Source = txtCustomSource2.Text;
+                GetVideoID();
+                FormatReferenceVideo = txtCustomSource2.Text.Replace("watch?", "").Replace("=", "/") + "?autoplay=1&loop=1&playlist=" + VideoID; ;
+                PlayTheMovie();
+            }
+            catch (Exception E)
+            {
+                MessageBox.Show("ERROR:" + E);
+            }
+        }
+
+        private void btnPlayCust3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Source = txtCustomSource3.Text;
+                GetVideoID();
+                FormatReferenceVideo = txtCustomSource3.Text.Replace("watch?", "").Replace("=", "/") + "?autoplay=1&loop=1&playlist=" + VideoID; ;
+                PlayTheMovie();
+            }
+            catch (Exception E)
+            {
+                MessageBox.Show("ERROR:" + E);
+            }
+        }
+
+
+        #endregion Music
+
+        #region Data
+        private void SaveMusicDetails()
+        {
+            string[] CustomLinkDetails = { txtCustomLinkName1.Text, txtCustomLinkName2.Text, txtCustomName3.Text, txtCustomSource1.Text, txtCustomSource2.Text, txtCustomSource3.Text };
+            System.IO.File.WriteAllLines("Details.txt", CustomLinkDetails);
+        }
+
+
+        private void btnSaveDetails_Click(object sender, EventArgs e)
+        {
+            SaveMusicDetails();
+        }
+
+        private void LoadMusicDetails()
+        {
+            int counter = 0;
+            string[] lines;
+            lines = new string[6];
+            string line;
+
+            // Read the file and display it line by line.
+            System.IO.StreamReader file =
+               new System.IO.StreamReader("Details.txt");
+            while ((line = file.ReadLine()) != null)
+            {
+                lines[counter] = line;
+                switch (counter)
+                {
+                    case 0:
+                    txtCustomLinkName1.Text = line;
+                        break;
+                    case 1:
+                        txtCustomLinkName2.Text = line;
+                        break;
+                    case 2:
+                        txtCustomName3.Text = line;
+                        break;
+                    case 3:
+                        txtCustomSource1.Text = line;
+                        break;
+                    case 4:
+                        txtCustomSource2.Text = line;
+                        break;
+                    case 5:
+                        txtCustomSource3.Text = line;
+                        break;
+                }
+                counter++;
+            }
+
+            file.Close();
+        }
+
+        private void btnOpenLink_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://www.google.com");
+        }
+
+        #endregion data
+
+
+    }
+}
